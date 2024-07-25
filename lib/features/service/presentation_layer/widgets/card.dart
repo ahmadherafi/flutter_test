@@ -5,11 +5,13 @@ import 'package:test/common/extensions/widget_extensions.dart';
 import 'package:test/common/widgets/text.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:test/core/routing/routing_manager.dart';
+import 'package:test/features/service/business_logic_layer/service_controller.dart';
 import 'package:test/features/service/data_layer/models/service.dart';
 
 class CardWidget extends StatelessWidget {
+  ServiceController serviceController = Get.find<ServiceController>();
 final  ServiceModel serviceModel;
-  const CardWidget({
+   CardWidget({
     super.key,
     required this.serviceModel,
   });
@@ -116,7 +118,9 @@ final  ServiceModel serviceModel;
             ),
           ],
         ).onTap(() {
+
           RoutingManager.to(RouteName.cardDetails);
+            serviceController.showService(serviceModel.id);
           // RoutingManager.to(RouteName.cardDetails, arguments: cardModel);
         }),
       ),
