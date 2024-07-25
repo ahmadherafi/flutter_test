@@ -99,14 +99,14 @@ class Request {
         // handling bad requests.
         if (error.response!.statusCode == 400) {
           // this line is really depends on what server responds, and how it reply with errors.
-          throw badRequestException[error.response!.data["error"]["name"]] ??
+          throw badRequestException[error.response!.data["message"]] ??
               GenericException(
                 type: ExceptionType.other,
               );
         }
         if (error.response!.statusCode == 403) {
           // this line is really depends on what server responds, and how it reply with errors.
-          throw badRequestException[error.response!.data["error"]["name"]] ??
+          throw badRequestException[error.response!.data["message"]] ??
               GenericException(
                 type: ExceptionType.accountTerminated,
               );

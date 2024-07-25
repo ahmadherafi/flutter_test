@@ -77,6 +77,10 @@ Map<String, GenericException> badRequestException = {
     type: ExceptionType.passwordInvalid,
     errorMessage: "invalid_password",
   ),
+  "email or password is incorrect": GenericException(
+    type: ExceptionType.invalidCredentials,
+    errorMessage: "invalid_credentials",
+  ),
   "INVALID_CREDENTIALS": GenericException(
     type: ExceptionType.invalidCredentials,
     errorMessage: "invalid_credentials",
@@ -123,7 +127,7 @@ Map<String, GenericException> badRequestException = {
 Map<int, GenericException> statusCodesException = {
   400: GenericException(
     type: ExceptionType.notVerified,
-    errorMessage: "User is not verified",
+    errorMessage: "email or password is incorrect",
   ),
   403: GenericException(
     type: ExceptionType.notAuthorized,

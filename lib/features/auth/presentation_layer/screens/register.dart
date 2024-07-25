@@ -7,12 +7,14 @@ import 'package:test/common/extensions/widget_extensions.dart';
 import 'package:test/common/widgets/button.dart';
 import 'package:test/common/widgets/text.dart';
 import 'package:test/common/widgets/textfield.dart';
+import 'package:test/common/widgets/toast.dart';
 import 'package:test/core/routing/routing_manager.dart';
 import 'package:test/features/auth/business_logic_layer/auth_controller.dart';
 
 class RegisterScreen extends StatelessWidget {
   AuthController authController = Get.find<AuthController>();
   RegisterScreen({super.key});
+  final _formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
@@ -38,11 +40,14 @@ class RegisterScreen extends StatelessWidget {
                             : FileImage(authController.registerModel.value.image!) as ImageProvider,
                       ).center();
                     }),
-                    const Column(
-                      // mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        Icon(Icons.folder_open),
-                      ],
+                    Form(
+                      key: _formKey,
+                      child: const Column(
+                        // mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          Icon(Icons.folder_open),
+                        ],
+                      ),
                     )
                   ],
                 ).onTap(() {
@@ -55,6 +60,9 @@ class RegisterScreen extends StatelessWidget {
                   keyboardType: TextInputType.emailAddress,
                   hint: "Name",
                   validate: (value) {
+                    if (value == null || value.isEmpty) {
+                      return "The name is required";
+                    }
                     return null;
                   },
                 ),
@@ -65,6 +73,9 @@ class RegisterScreen extends StatelessWidget {
                   keyboardType: TextInputType.emailAddress,
                   hint: "Phone",
                   validate: (value) {
+                    if (value == null || value.isEmpty) {
+                      return "The phone is required";
+                    }
                     return null;
                   },
                 ),
@@ -75,6 +86,9 @@ class RegisterScreen extends StatelessWidget {
                   keyboardType: TextInputType.emailAddress,
                   hint: "Email",
                   validate: (value) {
+                    if (value == null || value.isEmpty) {
+                      return "The email is required";
+                    }
                     return null;
                   },
                 ),
@@ -84,7 +98,14 @@ class RegisterScreen extends StatelessWidget {
                   },
                   keyboardType: TextInputType.emailAddress,
                   hint: "Password",
+                  obscure: true,
                   validate: (value) {
+                    if (value == null || value.isEmpty) {
+                      return "The password is required";
+                    }
+                    if (value.length < 8) {
+                      return "password is short";
+                    }
                     return null;
                   },
                 ),
@@ -94,7 +115,14 @@ class RegisterScreen extends StatelessWidget {
                   },
                   keyboardType: TextInputType.emailAddress,
                   hint: "Password confirmation",
+                  obscure: true,
                   validate: (value) {
+                    if (value == null || value.isEmpty) {
+                      return "Confirm Password is required".tr;
+                    }
+                    if (value != authController.registerModel.value.password) {
+                      return "Password did't identical".tr;
+                    }
                     return null;
                   },
                 ),
@@ -109,12 +137,16 @@ class RegisterScreen extends StatelessWidget {
                     return ButtonWidget(
                       isLoading: authController.registerState.loading,
                       onTap: () {
-                        authController.register(
-                          onSuccess: (p0) {
-                            RoutingManager.offAll(RouteName.service);
-                          },
-                          onError: (p0) {},
-                        );
+                        if (_formKey.currentState!.validate()) {
+                          authController.register(
+                            onSuccess: (p0) {
+                              RoutingManager.offAll(RouteName.service);
+                            },
+                            onError: (p0) {
+                              Snackbar.error(p0.toString());
+                            },
+                          );
+                        }
                       },
                       title: "Create Account",
                       height: 50,
