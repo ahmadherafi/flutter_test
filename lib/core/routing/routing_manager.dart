@@ -1,7 +1,9 @@
 import 'package:get/get.dart';
 import 'package:test/features/auth/presentation_layer/screens/login.dart';
 import 'package:test/features/auth/presentation_layer/screens/register.dart';
+import 'package:test/features/auth/presentation_layer/screens/splach.dart';
 import 'package:test/features/service/presentation_layer/screens/service.dart';
+import 'package:test/features/service/presentation_layer/screens/service_details.dart';
 
 
 class RouteName {
@@ -9,11 +11,16 @@ class RouteName {
   static String login = '/login';
   static String register = '/register';
   static String service = '/service';
+  static String cardDetails = '/card-details';
 
 }
 
 class RoutingManager {
   static List<GetPage<dynamic>> pages = [
+    GetPage(
+      name: RouteName.splash,
+      page: () =>  SplashScreen(),
+    ),
     GetPage(
       name: RouteName.login,
       page: () =>  LoginScreen(),
@@ -25,6 +32,11 @@ class RoutingManager {
       GetPage(
       name: RouteName.service,
       page: () =>  ServiceScreen(),
+      middlewares: [ServiceMiddleware()]
+    ),
+    GetPage(
+      name: RouteName.cardDetails,
+      page: () =>  CardDetailsScreen(),
     ),
   
   ];

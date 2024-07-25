@@ -19,3 +19,25 @@ class TextWidget extends StatelessWidget {
     );
   }
 }
+
+class NormalTextWidget extends StatelessWidget {
+  final String text;
+  final TextStyle? style;
+  final TextAlign? textAlign;
+
+  const NormalTextWidget(
+    this.text, {
+    Key? key,
+    this.style,
+    this.textAlign,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Text(
+      text,
+      style: style ?? TextStyle(fontSize: 16, color: Colors.grey[800]),
+      textAlign: textAlign,
+    );
+  }
+}

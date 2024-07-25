@@ -3,13 +3,15 @@ import 'package:get/get.dart';
 
 import 'package:test/common/const/constant.dart';
 import 'package:test/common/extensions/widget_extensions.dart';
+import 'package:test/features/service/business_logic_layer/service_controller.dart';
 
 class AppBarWidget extends StatelessWidget implements PreferredSizeWidget {
-  // TextEditingController? textEditingController;
+  ServiceController serviceController = Get.find<ServiceController>();
+
   @override
   // TODO: implement preferredSize
   Size get preferredSize => const Size.fromHeight(100);
-  const AppBarWidget({super.key});
+   AppBarWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -19,36 +21,7 @@ class AppBarWidget extends StatelessWidget implements PreferredSizeWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              const Row(
-                children: [
-                  // CircleAvatarWidget(
-                  //   radius: 20,
-                  //   isUserAvatar: true,
-                  // // ).paddingSymmetric(horizontal: 10),
-                  // Obx(() {
-                  //   return BoldTextWidget(
-                  //     "${homeController.user.value?.firstName}"
-                  //     " "
-                  //     "${homeController.user.value?.lastName}",
-                  //     color: AppColors.textColor,
-                  //   ).paddingSymmetric(horizontal: 5);
-                  // })
-                ],
-              ).onTap(() {
-                // homeController.onPress(3);
-              }),
-              // Row(
-              //   children: [
-              //     SvgPicture.asset("assets/icons/notification.svg").onTap(() {
-              //       RoutingManager.to(RouteName.notification);
-              //     }),
-              //   ],
-              // ).paddingSymmetric(horizontal: 10)
-            ],
-          ).paddingSymmetric(horizontal: 10, vertical: 10),
+         
           Container(
             padding: const EdgeInsets.only(top: 3),
             width: Get.width * .9,
@@ -56,18 +29,10 @@ class AppBarWidget extends StatelessWidget implements PreferredSizeWidget {
             child: TextFormField(
               // controller: controller,
               textInputAction: TextInputAction.search,
-              // onFieldSubmitted: onFieldSubmitted ??
-              //     (value) {
-              //       if (Get.currentRoute != RoutesName.search) {
-              //         RoutingManager.to(RoutesName.search);
-              //         controller!.clear();
-              //         FocusManager.instance.primaryFocus
-              //             ?.unfocus(disposition: UnfocusDisposition.scope);
-              //         return;
-              //       }
-
-              //       searchController.search();
-              //     },
+              onFieldSubmitted:
+                  (value) {
+                    serviceController.getServices(name: value);
+                  },
               cursorColor: AppColors.primeColor,
 
               style: const TextStyle(

@@ -4,10 +4,14 @@ import 'package:test/common/const/constant.dart';
 import 'package:test/common/extensions/widget_extensions.dart';
 import 'package:test/common/widgets/text.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:test/core/routing/routing_manager.dart';
+import 'package:test/features/service/data_layer/models/service.dart';
 
 class CardWidget extends StatelessWidget {
+final  ServiceModel serviceModel;
   const CardWidget({
     super.key,
+    required this.serviceModel,
   });
 
   @override
@@ -40,7 +44,7 @@ class CardWidget extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     TextWidget(
-                      "title",
+                      serviceModel.title,
                       size: 12,
                       color: AppColors.borderColor,
                     ).paddingSymmetric(horizontal: 10),
@@ -69,34 +73,23 @@ class CardWidget extends StatelessWidget {
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Row(
+                   Row(
                     children: [
-                      CircleAvatar(),
+                      CircleAvatar(
+                        backgroundImage: NetworkImage(serviceModel.image),
+                      ),
                       SizedBox(
                         width: 30,
                       ),
-                      TextWidget("Name"),
+                      TextWidget(serviceModel.name),
                     ],
                   ).paddingSymmetric(horizontal: 20, vertical: 10),
                   Column(
                     children: [
-                      // Container(
-                      //   alignment: Alignment.center,
-                      //   width: 75,
-                      //   height: 75,
-                      //   decoration: BoxDecoration(
-                      //     color: AppColors.primeColor,
-                      //     shape: BoxShape.circle,
-                      //   ),
-                      //   child: TextWidget(
-                      //     (cardModel.avgRating / 2).toString(),
-                      //     size: 24,
-                      //     color: Colors.white,
-                      //   ),
-                      // ),
+      
                       RatingBar.builder(
                         itemSize: 15,
-                        initialRating: 1,
+                        initialRating: serviceModel.rate.toDouble(),
                         minRating: 1,
                         direction: Axis.horizontal,
                         allowHalfRating: true,
@@ -123,6 +116,7 @@ class CardWidget extends StatelessWidget {
             ),
           ],
         ).onTap(() {
+          RoutingManager.to(RouteName.cardDetails);
           // RoutingManager.to(RouteName.cardDetails, arguments: cardModel);
         }),
       ),

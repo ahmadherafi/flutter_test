@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:test/common/const/constant.dart';
@@ -6,9 +8,11 @@ import 'package:test/common/widgets/button.dart';
 import 'package:test/common/widgets/text.dart';
 import 'package:test/common/widgets/textfield.dart';
 import 'package:test/core/routing/routing_manager.dart';
+import 'package:test/features/auth/business_logic_layer/auth_controller.dart';
 
 class RegisterScreen extends StatelessWidget {
-  const RegisterScreen({super.key});
+  AuthController authController = Get.find<AuthController>();
+  RegisterScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -26,10 +30,14 @@ class RegisterScreen extends StatelessWidget {
                 Stack(
                   alignment: Alignment.bottomCenter,
                   children: [
-                    const CircleAvatar(
-                      radius: 50,
-                      backgroundImage: AssetImage("assets/images/download.png"),
-                    ).center(),
+                    Obx(() {
+                      return CircleAvatar(
+                        radius: 50,
+                        backgroundImage: authController.registerModel.value.image == null
+                            ? const AssetImage("assets/images/download.png")
+                            : FileImage(authController.registerModel.value.image!) as ImageProvider,
+                      ).center();
+                    }),
                     const Column(
                       // mainAxisAlignment: MainAxisAlignment.end,
                       children: [
@@ -37,9 +45,13 @@ class RegisterScreen extends StatelessWidget {
                       ],
                     )
                   ],
-                ).paddingOnly(bottom: 20),
+                ).onTap(() {
+                  authController.pickImage();
+                }).paddingOnly(bottom: 20),
                 TextFieldWidget(
-                  onChange: (value) {},
+                  onChange: (value) {
+                    authController.registerModel.value.name = value;
+                  },
                   keyboardType: TextInputType.emailAddress,
                   hint: "Name",
                   validate: (value) {
@@ -47,7 +59,9 @@ class RegisterScreen extends StatelessWidget {
                   },
                 ),
                 TextFieldWidget(
-                  onChange: (value) {},
+                  onChange: (value) {
+                    authController.registerModel.value.phone = value;
+                  },
                   keyboardType: TextInputType.emailAddress,
                   hint: "Phone",
                   validate: (value) {
@@ -55,7 +69,9 @@ class RegisterScreen extends StatelessWidget {
                   },
                 ),
                 TextFieldWidget(
-                  onChange: (value) {},
+                  onChange: (value) {
+                    authController.registerModel.value.email = value;
+                  },
                   keyboardType: TextInputType.emailAddress,
                   hint: "Email",
                   validate: (value) {
@@ -63,7 +79,9 @@ class RegisterScreen extends StatelessWidget {
                   },
                 ),
                 TextFieldWidget(
-                  onChange: (value) {},
+                  onChange: (value) {
+                    authController.registerModel.value.password = value;
+                  },
                   keyboardType: TextInputType.emailAddress,
                   hint: "Password",
                   validate: (value) {
@@ -71,7 +89,9 @@ class RegisterScreen extends StatelessWidget {
                   },
                 ),
                 TextFieldWidget(
-                  onChange: (value) {},
+                  onChange: (value) {
+                    authController.registerModel.value.passwordConfirm = value;
+                  },
                   keyboardType: TextInputType.emailAddress,
                   hint: "Password confirmation",
                   validate: (value) {
@@ -85,13 +105,21 @@ class RegisterScreen extends StatelessWidget {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  ButtonWidget(
-                    onTap: () {
-                      RoutingManager.offAll(RouteName.service);
-                    },
-                    title: "Create Account",
-                    height: 50,
-                  ).paddingOnly(bottom: 20),
+                  Obx(() {
+                    return ButtonWidget(
+                      isLoading: authController.registerState.loading,
+                      onTap: () {
+                        authController.register(
+                          onSuccess: (p0) {
+                            RoutingManager.offAll(RouteName.service);
+                          },
+                          onError: (p0) {},
+                        );
+                      },
+                      title: "Create Account",
+                      height: 50,
+                    ).paddingOnly(bottom: 20);
+                  }),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
